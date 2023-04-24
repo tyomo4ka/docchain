@@ -1,0 +1,2 @@
+class DocumentGenerationError(Exception):
+    pass

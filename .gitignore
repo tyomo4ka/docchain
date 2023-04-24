@@ -1,0 +1,15 @@
+# Configs
+.env
+poetry.lock
+.poetry/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+.docchain/*
+!.docchain/.gitkeep
+
+.pytest_cache
+.install
