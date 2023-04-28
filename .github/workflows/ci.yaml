@@ -39,7 +39,7 @@ jobs:
     needs: [tests, pre-commit]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
       - run: pipx install poetry
       - uses: actions/setup-python@v4
         with:
@@ -50,3 +50,18 @@ jobs:
         with:
           password: ${{ secrets.pypi_password_test }}
           repository_url: https://test.pypi.org/legacy/
+      - uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.pypi_password }}
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            Changes:
+            - ...
+            - ...
+          draft: true
+          prerelease: false
