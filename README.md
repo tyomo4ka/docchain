@@ -22,4 +22,3 @@ in an HTTP framework and cna be used for variety of tasks.
 ## TODO
 
 - [ ] Implement checkpoints and resume generation from checkpoint on failure.
-- [ ] Publish to PyPI.
