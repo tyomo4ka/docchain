@@ -24,17 +24,6 @@ class TextSectionSpec(BaseModel):
     )
 
 
-class PydanticSectionSpec(TextSectionSpec):
-    key: str = Field(
-        regex="[a-zA-Z0-9_\\-\\.]{1,100}",
-        description="A unique string key for the section. Must be unique within the document. "
-        "Dot in the key represents a nested section.",
-    )
-    document_schema: type[BaseModel] = Field(
-        description="A Pydantic model representing the schema for the section."
-    )
-
-
 class TextDocumentSpec(Spec):
     document_name: str = Field(default="", description="The name of the document.")
     document_description: str = Field(
@@ -43,6 +32,24 @@ class TextDocumentSpec(Spec):
     sections: list[TextSectionSpec] = Field(
         default=[],
         description="A list of objects representing the sections within the document.",
+    )
+
+
+class PydanticSectionSpec(TextSectionSpec):
+    key: str = Field(
+        regex="[a-zA-Z0-9_\\-\\.]{1,100}",
+        description="A unique string key for the section. Must be unique within the document. "
+        "Dot in the key represents a nested section.",
+    )
+
+
+class JSONSchemaSectionSpec(PydanticSectionSpec):
+    pass
+
+
+class ModelSectionSpec(PydanticSectionSpec):
+    document_schema: type[BaseModel] = Field(
+        description="A Pydantic model representing the schema for the section."
     )
 
 

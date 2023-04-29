@@ -3,7 +3,7 @@ from docchain.generators.pydantic import PydanticGenerator
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 
-from docchain.specs import PydanticDocumentSpec, PydanticSectionSpec
+from docchain.specs import PydanticDocumentSpec, ModelSectionSpec
 
 
 class TestModel(BaseModel):
@@ -26,12 +26,12 @@ def test_generator_pydantic():
         document_name="TD",
         document_description="Test description",
         sections=[
-            PydanticSectionSpec(
+            ModelSectionSpec(
                 section_name="Item 1",
                 key="Item_1",
                 document_schema=TestModel,
             ),
-            PydanticSectionSpec(
+            ModelSectionSpec(
                 section_name="Item 2",
                 key="Item_2",
                 document_schema=TestModel,
@@ -85,7 +85,7 @@ def test_nested_key():
         document_name="TD",
         document_description="Test description",
         sections=[
-            PydanticSectionSpec(
+            ModelSectionSpec(
                 section_name="Test section",
                 key="nested.section",
                 document_schema=TestModel,
