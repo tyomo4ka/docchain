@@ -1,4 +1,4 @@
-from docchain.documents import Format, PydanticFormat
+from docchain.documents import PydanticFormat
 from docchain.generators.pydantic import PydanticGenerator
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
@@ -6,11 +6,12 @@ from pydantic import BaseModel
 from docchain.specs import PydanticDocumentSpec, PydanticSectionSpec
 
 
-def test_generator_pydantic():
-    class TestModel(BaseModel):
-        title: str
-        description: str
+class TestModel(BaseModel):
+    title: str
+    description: str
 
+
+def test_generator_pydantic():
     llm = FakeListLLM(
         responses=[
             '{"title": "Item 1", "description": "Item section text 1"}',
@@ -67,4 +68,43 @@ Item_2:
     description: Item section text 2
     title: Item 2
 """
+    )
+
+
+def test_nested_key():
+    generator = PydanticGenerator(
+        llm=FakeListLLM(
+            responses=[
+                '{"title": "Title", "description": "Description"}',
+            ]
+        )
+    )
+
+    spec = PydanticDocumentSpec(
+        document_title="Test document",
+        document_name="TD",
+        document_description="Test description",
+        sections=[
+            PydanticSectionSpec(
+                section_name="Test section",
+                key="nested.section",
+                document_schema=TestModel,
+            ),
+        ],
+    )
+
+    doc = generator.build_document(spec)
+
+    assert doc.format == PydanticFormat.json
+    assert doc.title == "Test document"
+    assert (
+        doc.text
+        == """{
+    "nested": {
+        "section": {
+            "title": "Title",
+            "description": "Description"
+        }
+    }
+}"""
     )

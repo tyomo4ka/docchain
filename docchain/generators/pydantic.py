@@ -7,12 +7,13 @@ from langchain.chains import LLMChain
 
 from .base import BaseDocumentGenerator
 from ..documents import Document, Section, PydanticFormat
-from docchain.settings import conf
+from ..settings import conf
 from langchain.llms import BaseLLM
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 
 from ..specs import PydanticDocumentSpec, PydanticSectionSpec
+from ..utils import set_nested_key
 
 
 class PydanticGenerator(BaseDocumentGenerator):
@@ -38,7 +39,7 @@ class PydanticGenerator(BaseDocumentGenerator):
         for section_spec in spec.sections:
             section = self.build_section(section_spec)
             doc.sections.append(section)
-            doc_dict[section_spec.key] = json.loads(section.text)
+            set_nested_key(doc_dict, section_spec.key, json.loads(section.text))
 
         match spec.format:
             case PydanticFormat.json:

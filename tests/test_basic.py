@@ -2,7 +2,9 @@ import os
 
 import pytest
 
-from docchain import BaseDocumentGenerator, Document, Spec
+from docchain.documents import Document
+from docchain.generators.base import BaseDocumentGenerator
+from docchain.specs import Spec
 from docchain.exceptions import DocumentGenerationError
 from tests.examples.examples import AddTitleSectionStep, mark_as_draft, throws_exception
 
@@ -24,7 +26,7 @@ def test_basic_document_builder():
 def test_exception_handling():
     document_builder = BaseDocumentGenerator(steps=[throws_exception])
     spec = Spec(document_title="Test")
-    with pytest.raises(DocumentGenerationError) as e:
+    with pytest.raises(DocumentGenerationError):
         document_builder(spec)
 
     assert os.path.exists(".docchain/failed/Test")

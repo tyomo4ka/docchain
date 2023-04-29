@@ -1,5 +1,7 @@
 import os
-from docchain import BaseDocumentGenerator, Document, Spec
+from docchain.generators.base import BaseDocumentGenerator
+from docchain.specs import Spec
+from docchain.documents import Document
 from .examples.examples import AddTitleSectionStep
 from docchain.steps.save_document import SaveDocumentStep
 from .conftest import override_settings

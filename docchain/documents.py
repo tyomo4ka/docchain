@@ -26,7 +26,8 @@ class Section(BaseModel):
 class Document(Section):
     """
     Document consist of Sections.
-    It should support the same behaviour as section though so documents can be included in other documents.
+    It should support the same behaviour as section though so documents can be
+    included in other documents.
     """
 
     sections: list[Section] = Field(default=[])

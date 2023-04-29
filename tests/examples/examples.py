@@ -1,7 +1,7 @@
 from logging import getLogger
 
-from docchain import Document, Spec
-from docchain.documents import Section
+from docchain.documents import Document, Section
+from docchain.specs import Spec
 from docchain.steps.base import AbstractStep
 
 logger = getLogger(__name__)

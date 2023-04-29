@@ -26,11 +26,12 @@ class TextSectionSpec(BaseModel):
 
 class PydanticSectionSpec(TextSectionSpec):
     key: str = Field(
-        regex="[a-zA-Z0-9_-]{0,1000}",
-        description="A unique string key for the section. Follows slug format.",
+        regex="[a-zA-Z0-9_\\-\\.]{1,100}",
+        description="A unique string key for the section. Must be unique within the document. "
+        "Dot in the key represents a nested section.",
     )
     document_schema: type[BaseModel] = Field(
-        description="A Pydantic BaseModel representing the schema for the section."
+        description="A Pydantic model representing the schema for the section."
     )
 
 
@@ -41,7 +42,7 @@ class TextDocumentSpec(Spec):
     )
     sections: list[TextSectionSpec] = Field(
         default=[],
-        description="A list of TextSectionSpec objects representing the sections within the document.",
+        description="A list of objects representing the sections within the document.",
     )
 
 
@@ -52,5 +53,5 @@ class PydanticDocumentSpec(TextDocumentSpec):
     )
     sections: list[PydanticSectionSpec] = Field(
         default=[],
-        description="A list of PydanticSectionSpec objects representing the sections within the document.",
+        description="A list of objects representing the sections within the document.",
     )
