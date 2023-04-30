@@ -7,12 +7,19 @@ from langchain.chains import LLMChain
 
 from .base import BaseDocumentGenerator
 from ..documents import Document, Section, PydanticFormat
+from ..output_parsers.json_schema import JSONSchemaOutputParser
 from ..settings import conf
 from langchain.llms import BaseLLM
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 
-from ..specs import PydanticDocumentSpec, PydanticSectionSpec
+
+from ..specs import (
+    PydanticDocumentSpec,
+    PydanticSectionSpec,
+    ModelSectionSpec,
+    JSONSchemaSectionSpec,
+)
 from ..utils import set_nested_key
 
 
@@ -37,7 +44,7 @@ class PydanticGenerator(BaseDocumentGenerator):
 
         doc_dict = {}
         for section_spec in spec.sections:
-            section = self.build_section(section_spec)
+            section = self.gen_section(section_spec)
             doc.sections.append(section)
             set_nested_key(doc_dict, section_spec.key, json.loads(section.text))
 
@@ -49,11 +56,20 @@ class PydanticGenerator(BaseDocumentGenerator):
 
         return doc
 
-    def build_section(self, spec: PydanticSectionSpec) -> Section:
+    def gen_section(self, spec: PydanticSectionSpec) -> Section:
         section = Section(
             title=spec.title,
         )
 
+        match spec:
+            case ModelSectionSpec():
+                section.text = self.generate_model_section(spec)
+            case JSONSchemaSectionSpec():
+                section.text = self.generate_json_schema_section(spec)
+
+        return section
+
+    def generate_model_section(self, spec: ModelSectionSpec) -> str:
         parser = PydanticOutputParser(pydantic_object=spec.document_schema)
         default_prompt = PromptTemplate(
             template="""
@@ -65,12 +81,29 @@ class PydanticGenerator(BaseDocumentGenerator):
             output_parser=parser,
             partial_variables={"format_instructions": parser.get_format_instructions()},
         )
-
         llm_chain = LLMChain(prompt=default_prompt, llm=self.llm)
         result = llm_chain.run(
             section_name=spec.title,
             description=spec.description,
         )
-        section.text = result
 
-        return section
+        return result
+
+    def generate_json_schema_section(self, spec: JSONSchemaSectionSpec) -> str:
+        parser = JSONSchemaOutputParser()
+        default_prompt = PromptTemplate(
+            template="""Give me JSON Schema for {section_name}.
+{description}
+{format_instructions}
+        """,
+            output_parser=parser,
+            input_variables=["section_name", "description"],
+            partial_variables={"format_instructions": parser.get_format_instructions()},
+        )
+        llm_chain = LLMChain(prompt=default_prompt, llm=self.llm)
+        result = llm_chain.run(
+            section_name=spec.title,
+            description=spec.description,
+        )
+
+        return result

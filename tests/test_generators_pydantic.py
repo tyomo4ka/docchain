@@ -3,7 +3,7 @@ from docchain.generators.pydantic import PydanticGenerator
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 
-from docchain.specs import PydanticDocumentSpec, ModelSectionSpec
+from docchain.specs import PydanticDocumentSpec, ModelSectionSpec, JSONSchemaSectionSpec
 
 
 class TestModel(BaseModel):
@@ -105,6 +105,75 @@ def test_nested_key():
             "title": "Title",
             "description": "Description"
         }
+    }
+}"""
+    )
+
+
+def test_jsonschema():
+    generator = PydanticGenerator(
+        llm=FakeListLLM(
+            responses=[
+                """{
+    "$schema": "http://json-schema.org/draft-2020-12/schema",
+    "type": "object",
+    "properties": {
+        "firstName": {
+            "type": "string"
+        },
+        "lastName": {
+            "type": "string"
+        },
+        "age": {
+            "type": "integer"
+        }
+    },
+    "required": [
+        "firstName",
+        "lastName",
+        "age"
+    ]
+}
+""",
+            ]
+        )
+    )
+    spec = PydanticDocumentSpec(
+        document_title="Test document",
+        document_name="TD",
+        document_description="Test description",
+        sections=[
+            JSONSchemaSectionSpec(
+                section_name="Validate person details",
+                key="person_details_schema",
+                description="Include first name, last name, and age.",
+            ),
+        ],
+    )
+
+    doc = generator.build_document(spec)
+    assert (
+        doc.text
+        == """{
+    "person_details_schema": {
+        "$schema": "http://json-schema.org/draft-2020-12/schema",
+        "type": "object",
+        "properties": {
+            "firstName": {
+                "type": "string"
+            },
+            "lastName": {
+                "type": "string"
+            },
+            "age": {
+                "type": "integer"
+            }
+        },
+        "required": [
+            "firstName",
+            "lastName",
+            "age"
+        ]
     }
 }"""
     )

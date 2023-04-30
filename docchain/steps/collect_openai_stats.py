@@ -3,7 +3,7 @@ from ..settings import conf
 
 from logging import getLogger
 
-from docchain import Spec
+from docchain.specs import Spec
 from langchain.callbacks import get_openai_callback
 
 logger = getLogger(__name__)
