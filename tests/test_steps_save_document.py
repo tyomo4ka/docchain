@@ -1,5 +1,5 @@
 import os
-from docchain.generators.base import BaseDocumentGenerator
+from docchain.generator import Generator
 from docchain.specs import Spec
 from docchain.documents import Document
 from .examples.examples import AddTitleSectionStep
@@ -9,9 +9,8 @@ from .conftest import override_settings
 
 def test_save_document(tmpdir):
     with override_settings(workspace=tmpdir):
-        document_builder = BaseDocumentGenerator(
+        document_builder = Generator(
             steps=(
-                # SaveDocumentStep must be first in the chain. So it's executed after other steps.
                 AddTitleSectionStep,
                 SaveDocumentStep,
             )

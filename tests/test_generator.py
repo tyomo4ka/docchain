@@ -1,14 +1,42 @@
-from docchain.documents import PydanticFormat
-from docchain.generators.pydantic import PydanticGenerator
+import os
+import pytest
+
+from docchain.documents import PydanticFormat, Document
+from docchain.generator import Generator
+from docchain.exceptions import DocumentGenerationError
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 
-from docchain.specs import PydanticDocumentSpec, ModelSectionSpec, JSONSchemaSectionSpec
+from tests.examples.examples import AddTitleSectionStep, mark_as_draft, throws_exception
+from docchain.specs import Spec, ModelSectionSpec, JSONSchemaSectionSpec
 
 
-class TestModel(BaseModel):
+class ModelForTests(BaseModel):
     title: str
     description: str
+
+
+def test_basic_document_builder():
+    document_builder = Generator(
+        steps=(
+            mark_as_draft,
+            AddTitleSectionStep,
+        )
+    )
+    spec = Spec(document_title="Test title")
+    document: Document = document_builder(spec)
+    assert document.title == "WIP: Test title (Draft)"
+    assert len(document.sections) == 1
+    assert document.sections[0].title == "test document_title"
+
+
+def test_exception_handling():
+    document_builder = Generator(steps=(throws_exception,))
+    spec = Spec(document_title="Test")
+    with pytest.raises(DocumentGenerationError):
+        document_builder(spec)
+
+    assert os.path.exists(".docchain/failed/Test")
 
 
 def test_generator_pydantic():
@@ -20,8 +48,8 @@ def test_generator_pydantic():
             '{"title": "Item 2", "description": "Item section text 2"}',
         ]
     )
-    generator = PydanticGenerator(llm=llm)
-    spec = PydanticDocumentSpec(
+    generator = Generator(llm=llm)
+    spec = Spec(
         document_title="Test document",
         document_name="TD",
         document_description="Test description",
@@ -29,12 +57,12 @@ def test_generator_pydantic():
             ModelSectionSpec(
                 section_name="Item 1",
                 key="Item_1",
-                document_schema=TestModel,
+                document_schema=ModelForTests,
             ),
             ModelSectionSpec(
                 section_name="Item 2",
                 key="Item_2",
-                document_schema=TestModel,
+                document_schema=ModelForTests,
             ),
         ],
     )
@@ -72,7 +100,7 @@ Item_2:
 
 
 def test_nested_key():
-    generator = PydanticGenerator(
+    generator = Generator(
         llm=FakeListLLM(
             responses=[
                 '{"title": "Title", "description": "Description"}',
@@ -80,7 +108,7 @@ def test_nested_key():
         )
     )
 
-    spec = PydanticDocumentSpec(
+    spec = Spec(
         document_title="Test document",
         document_name="TD",
         document_description="Test description",
@@ -88,7 +116,7 @@ def test_nested_key():
             ModelSectionSpec(
                 section_name="Test section",
                 key="nested.section",
-                document_schema=TestModel,
+                document_schema=ModelForTests,
             ),
         ],
     )
@@ -111,7 +139,7 @@ def test_nested_key():
 
 
 def test_jsonschema():
-    generator = PydanticGenerator(
+    generator = Generator(
         llm=FakeListLLM(
             responses=[
                 """{
@@ -138,7 +166,7 @@ def test_jsonschema():
             ]
         )
     )
-    spec = PydanticDocumentSpec(
+    spec = Spec(
         document_title="Test document",
         document_name="TD",
         document_description="Test description",
