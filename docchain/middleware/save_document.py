@@ -1,9 +1,9 @@
-from .base import AbstractStep
+from .base import AbstractMiddleware
 from ..documents import Document
 from ..settings import conf
 
 
-class SaveDocumentStep(AbstractStep):
+class SaveDocumentMiddleware(AbstractMiddleware):
     """
     Saves document in the workspace as a text file.
     """

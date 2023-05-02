@@ -25,10 +25,10 @@ logger = getLogger(__name__)
 
 
 class Generator:
-    def __init__(self, steps: Iterable[callable] = None, llm: BaseLLM = None):
-        self.steps = steps or []
+    def __init__(self, middleware: Iterable[callable] = None, llm: BaseLLM = None):
+        self.middleware = middleware or []
         handler = self.build_document
-        for step in self.steps:
+        for step in self.middleware:
             handler = step(handler)
 
         self.llm = llm or conf.default_llm_factory()

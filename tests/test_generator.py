@@ -7,7 +7,11 @@ from docchain.exceptions import DocumentGenerationError
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 
-from tests.examples.examples import AddTitleSectionStep, mark_as_draft, throws_exception
+from tests.examples.examples import (
+    AddTitleSectionMiddleware,
+    mark_as_draft,
+    throws_exception,
+)
 from docchain.specs import Spec, ModelSectionSpec, JSONSchemaSectionSpec
 
 
@@ -18,10 +22,11 @@ class ModelForTests(BaseModel):
 
 def test_basic_document_builder():
     document_builder = Generator(
-        steps=(
+        middleware=(
             mark_as_draft,
-            AddTitleSectionStep,
-        )
+            AddTitleSectionMiddleware,
+        ),
+        llm=FakeListLLM(responses=[]),
     )
     spec = Spec(document_title="Test title")
     document: Document = document_builder(spec)
@@ -31,7 +36,10 @@ def test_basic_document_builder():
 
 
 def test_exception_handling():
-    document_builder = Generator(steps=(throws_exception,))
+    document_builder = Generator(
+        middleware=(throws_exception,),
+        llm=FakeListLLM(responses=[]),
+    )
     spec = Spec(document_title="Test")
     with pytest.raises(DocumentGenerationError):
         document_builder(spec)

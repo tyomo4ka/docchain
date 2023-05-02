@@ -2,7 +2,7 @@ from ..documents import Document
 from ..specs import Spec
 
 
-class AbstractStep:
+class AbstractMiddleware:
     def __init__(self, build_document: callable):
         self.build_document = build_document
 

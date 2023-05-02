@@ -2,18 +2,20 @@ import os
 from docchain.generator import Generator
 from docchain.specs import Spec
 from docchain.documents import Document
-from .examples.examples import AddTitleSectionStep
-from docchain.steps.save_document import SaveDocumentStep
+from .examples.examples import AddTitleSectionMiddleware
+from docchain.middleware.save_document import SaveDocumentMiddleware
 from .conftest import override_settings
+from langchain.llms.fake import FakeListLLM
 
 
 def test_save_document(tmpdir):
     with override_settings(workspace=tmpdir):
         document_builder = Generator(
-            steps=(
-                AddTitleSectionStep,
-                SaveDocumentStep,
-            )
+            middleware=(
+                AddTitleSectionMiddleware,
+                SaveDocumentMiddleware,
+            ),
+            llm=FakeListLLM(responses=[]),
         )
         filename = "test.txt"
         spec = Spec(filename=filename, document_title="Product description")

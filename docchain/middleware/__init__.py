@@ -1,8 +1,8 @@
 """
-Defines reusable builder steps.
+Defines reusable builder middleware.
 Steps can be implemented as a class if required more complex logic or as functions for simpler use.
 
-Class: extend AbstractStep.
+Class: extend AbstractMiddleware.
 
 See an example of Function step below.
 

@@ -2,12 +2,12 @@ from logging import getLogger
 
 from docchain.documents import Document, Section
 from docchain.specs import Spec
-from docchain.steps.base import AbstractStep
+from docchain.middleware.base import AbstractMiddleware
 
 logger = getLogger(__name__)
 
 
-class AddTitleSectionStep(AbstractStep):
+class AddTitleSectionMiddleware(AbstractMiddleware):
     def doc_pass(self, document: Document):
         document.sections.append(
             Section(
@@ -40,7 +40,7 @@ def mark_as_draft(build_document):
 def throws_exception(build_document):
     def run(spec: Spec):
         build_document(spec)
-        # Exception is raised on the way back, so the doc will be generated first
+        # Exception is raised after document generation.
         raise NotImplementedError("This will be converted.")
 
     return run
