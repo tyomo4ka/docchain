@@ -18,8 +18,8 @@ class JSONSchemaBlock(BaseBlock):
         parser = JSONSchemaOutputParser()
         default_prompt = PromptTemplate(
             template="""Give me JSON Schema for {section_name}.
-    {description}
-    {format_instructions}
+{description}
+{format_instructions}
             """,
             output_parser=parser,
             input_variables=["section_name", "description"],

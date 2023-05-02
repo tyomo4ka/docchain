@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from .documents import Format
 from .blocks.base import BaseBlock
 from .documents import Document
@@ -11,7 +12,7 @@ class Spec:
         name: str = "",
         description: str = "",
         fmt: Format = Format.json,
-        blocks: list[BaseBlock] | callable = None,
+        blocks: list[BaseBlock | Callable] = None,
         doc: Document = None,
     ):
         self.title = title
