@@ -4,8 +4,7 @@ import pytest
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 
-from docchain.blocks.json_schema import JSONSchemaBlock
-from docchain.blocks.pydantic import PydanticBlock
+from docchain.blocks import JSONSchemaBlock, PydanticBlock
 from docchain.documents import Document, Format
 from docchain.exceptions import DocumentGenerationError
 from docchain.generator import Generator

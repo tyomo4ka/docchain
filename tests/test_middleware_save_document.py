@@ -4,7 +4,7 @@ from langchain.llms.fake import FakeListLLM
 
 from docchain.documents import Document, Format
 from docchain.generator import Generator
-from docchain.middleware.save_document import SaveDocumentMiddleware
+from docchain.middleware import SaveDocumentMiddleware
 from docchain.specs import Spec
 
 from .conftest import override_settings

@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from .blocks.base import BaseBlock
+from .blocks import BaseBlock
 from .documents import Document, Format
 
 
