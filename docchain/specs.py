@@ -1,7 +1,7 @@
 from collections.abc import Callable
-from .documents import Format
+
 from .blocks.base import BaseBlock
-from .documents import Document
+from .documents import Document, Format
 
 
 class Spec:

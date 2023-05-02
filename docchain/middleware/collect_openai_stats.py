@@ -1,10 +1,11 @@
 import json
-from ..settings import conf
-
 from logging import getLogger
 
-from docchain.specs import Spec
 from langchain.callbacks import get_openai_callback
+
+from docchain.specs import Spec
+
+from ..settings import conf
 
 logger = getLogger(__name__)
 

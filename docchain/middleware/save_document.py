@@ -1,6 +1,6 @@
-from .base import AbstractMiddleware
 from ..documents import Document
 from ..settings import conf
+from .base import AbstractMiddleware
 
 
 class SaveDocumentMiddleware(AbstractMiddleware):

@@ -1,8 +1,8 @@
 from logging import getLogger
 
 from docchain.documents import Document, Section
-from docchain.specs import Spec
 from docchain.middleware.base import AbstractMiddleware
+from docchain.specs import Spec
 
 logger = getLogger(__name__)
 

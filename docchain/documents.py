@@ -1,8 +1,8 @@
 from enum import Enum
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field
-from pathlib import Path
 
 
 class Format(str, Enum):

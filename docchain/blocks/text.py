@@ -1,9 +1,9 @@
-from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
 
-from .base import BaseBlock
-from ..settings import conf
 from ..documents import Document
+from ..settings import conf
+from .base import BaseBlock
 
 
 class TextBlock(BaseBlock):

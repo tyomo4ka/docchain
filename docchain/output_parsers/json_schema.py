@@ -3,9 +3,7 @@ import re
 
 import jsonschema
 from jsonschema import Draft202012Validator
-
 from langchain.schema import BaseOutputParser, OutputParserException
-
 
 FORMAT_INSTRUCTIONS = (
     "Give me result as json schema draft 2020-12. Use camel case for fields names. "

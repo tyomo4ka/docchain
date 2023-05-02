@@ -2,11 +2,10 @@ import os
 
 from langchain.llms.fake import FakeListLLM
 
+from docchain.documents import Document, Format
 from docchain.generator import Generator
-from docchain.specs import Spec
-from docchain.documents import Document
 from docchain.middleware.save_document import SaveDocumentMiddleware
-from docchain.documents import Format
+from docchain.specs import Spec
 
 from .conftest import override_settings
 from .examples.examples import AddSectionMiddleware

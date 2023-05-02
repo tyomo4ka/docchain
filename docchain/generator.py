@@ -1,16 +1,16 @@
 import json
-import yaml
 import os
-
 from collections.abc import Iterable
 from copy import deepcopy
 from logging import getLogger
+
+import yaml
 from langchain.llms.base import BaseLLM
 
-from .exceptions import DocumentGenerationError
-from .specs import Spec
 from .documents import Document, Format
+from .exceptions import DocumentGenerationError
 from .settings import conf
+from .specs import Spec
 from .utils import set_nested_val
 
 logger = getLogger(__name__)

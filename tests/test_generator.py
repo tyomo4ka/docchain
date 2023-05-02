@@ -1,21 +1,21 @@
 import os
-import pytest
 
-from docchain.documents import Format, Document
-from docchain.generator import Generator
-from docchain.exceptions import DocumentGenerationError
+import pytest
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
-from docchain.blocks.pydantic import PydanticBlock
-from docchain.blocks.json_schema import JSONSchemaBlock
-from tests.conftest import override_settings
 
+from docchain.blocks.json_schema import JSONSchemaBlock
+from docchain.blocks.pydantic import PydanticBlock
+from docchain.documents import Document, Format
+from docchain.exceptions import DocumentGenerationError
+from docchain.generator import Generator
+from docchain.specs import Spec
+from tests.conftest import override_settings
 from tests.examples.examples import (
     AddSectionMiddleware,
     mark_as_draft,
     throws_exception,
 )
-from docchain.specs import Spec
 
 
 class ModelForTests(BaseModel):

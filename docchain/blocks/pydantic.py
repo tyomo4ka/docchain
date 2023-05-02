@@ -2,8 +2,8 @@ import json
 
 from langchain.chains import LLMChain
 from langchain.llms.base import BaseLLM
-from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
+from langchain.prompts import PromptTemplate
 from pydantic import BaseModel
 
 from .base import BaseBlock

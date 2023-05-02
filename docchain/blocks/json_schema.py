@@ -4,8 +4,8 @@ from langchain.chains import LLMChain
 from langchain.llms.base import BaseLLM
 from langchain.prompts import PromptTemplate
 
-from .base import BaseBlock
 from ..output_parsers.json_schema import JSONSchemaOutputParser
+from .base import BaseBlock
 
 
 class JSONSchemaBlock(BaseBlock):
