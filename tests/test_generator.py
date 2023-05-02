@@ -8,6 +8,7 @@ from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 from docchain.blocks.pydantic import PydanticBlock
 from docchain.blocks.json_schema import JSONSchemaBlock
+from tests.conftest import override_settings
 
 from tests.examples.examples import (
     AddSectionMiddleware,
@@ -37,16 +38,18 @@ def test_basic_document_builder():
     assert list(document.res.values())[0].title == "test document_title"
 
 
-def test_exception_handling():
-    document_builder = Generator(
-        middleware=(throws_exception,),
-        llm=FakeListLLM(responses=[]),
-    )
-    spec = Spec(title="Test")
-    with pytest.raises(DocumentGenerationError):
-        document_builder(spec)
+def test_exception_handling(tmpdir):
+    with override_settings(workspace=tmpdir, debug=True):
+        document_builder = Generator(
+            middleware=(throws_exception,),
+            llm=FakeListLLM(responses=[]),
+        )
+        spec = Spec(title="Test")
+        with pytest.raises(DocumentGenerationError):
+            document_builder(spec)
 
-    assert os.path.exists(".docchain/failed/Test")
+        file = tmpdir.join("failed/Test")
+        assert os.path.exists(file)
 
 
 def test_generator_pydantic():

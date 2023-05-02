@@ -33,12 +33,13 @@ class Generator:
             if conf.debug:
                 if spec.doc:
                     logger.debug(spec.doc)
+
                     fname = f"{conf.workspace}/failed/{spec.title}"
                     os.makedirs(os.path.dirname(fname), exist_ok=True)
                     with open(
                         f"{conf.workspace}/failed/{spec.title}", mode="a+"
                     ) as file:
-                        file.write(str(spec.doc.dict()))
+                        file.write(str(spec.doc.res))
 
             raise DocumentGenerationError("Document generation failed") from exc
 
@@ -58,6 +59,7 @@ class Generator:
             format=spec.fmt,
             res={},
         )
+        spec.doc = doc
 
         for block in spec.blocks:
             res = block(
