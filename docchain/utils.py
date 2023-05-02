@@ -1,4 +1,4 @@
-def set_nested_key(obj: dict, path: str, value: any):
+def set_nested_val(obj: dict, path: str, value: any):
     *path, last = path.split(".")
 
     for key in path:

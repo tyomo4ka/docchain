@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel, Field
 from pathlib import Path
@@ -27,7 +28,7 @@ class Document(Section):
     included in other documents.
     """
 
-    res: dict
+    res: dict[str, Any]
     format: Format = Format.text
     filename: Path = Field(default=None)
     stats: dict[str, int | float] = Field(default={})

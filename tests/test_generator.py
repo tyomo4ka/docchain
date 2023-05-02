@@ -7,7 +7,7 @@ from docchain.exceptions import DocumentGenerationError
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 from docchain.blocks.pydantic import PydanticBlock
-from docchain.blocks.json_schema import JsonSchemaBlock
+from docchain.blocks.json_schema import JSONSchemaBlock
 
 from tests.examples.examples import (
     AddTitleSectionMiddleware,
@@ -181,7 +181,7 @@ def test_jsonschema():
         name="TD",
         description="Test description",
         blocks=[
-            JsonSchemaBlock(
+            JSONSchemaBlock(
                 "person_details_schema",
                 title="Validate person details",
                 description="Include first name, last name, and age.",

@@ -1,5 +1,5 @@
 import pytest
-from docchain.utils import set_nested_key
+from docchain.utils import set_nested_val
 
 
 @pytest.mark.parametrize(
@@ -12,7 +12,7 @@ from docchain.utils import set_nested_key
     ],
 )
 def test_set_nested_key(obj: dict, path: str, res):
-    set_nested_key(obj=obj, path=path, value=1)
+    set_nested_val(obj=obj, path=path, value=1)
     assert obj == res
 
 
@@ -29,5 +29,5 @@ def test_set_nested_key(obj: dict, path: str, res):
 )
 def test_set_nested_key__type_errors(obj: dict, path: str, err_mess: str):
     with pytest.raises(TypeError) as exc_info:
-        set_nested_key(obj=obj, path=path, value=1)
+        set_nested_val(obj=obj, path=path, value=1)
     assert exc_info.value.args[0] == err_mess

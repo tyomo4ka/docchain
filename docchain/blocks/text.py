@@ -12,23 +12,23 @@ class TextBlock(BaseBlock):
         self.title = title
         self.description = description
 
-    def __call_(self, document: Document, **kwargs):
+    def __call__(self, document: Document, **kwargs):
         prompt = PromptTemplate(
             template="""
-        Write {section_name} section of {document_name} document.
+        Write {section_name} section of {document_title} document.
 
         {description}
         """,
             input_variables=[
                 "section_name",
-                "document_name",
+                "document_title",
                 "description",
             ],
         )
         llm_chain = LLMChain(prompt=prompt, llm=conf.default_llm_factory())
         result = llm_chain.run(
             section_name=self.title,
-            document_name=document.document_name,
+            document_title=document.title,
             description=self.description,
         )
 

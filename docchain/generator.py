@@ -11,7 +11,7 @@ from .exceptions import DocumentGenerationError
 from .specs import Spec
 from .documents import Document, Format
 from .settings import conf
-from .utils import set_nested_key
+from .utils import set_nested_val
 
 logger = getLogger(__name__)
 
@@ -56,24 +56,22 @@ class Generator:
             title=spec.title,
             filename=spec.filename,
             format=spec.fmt,
-            text="{}",
+            res={},
         )
 
-        doc_dict = {}
         for block in spec.blocks:
             res = block(
                 document=doc,
                 llm=self.llm,
             )
-            doc.sections.append(res)
-            set_nested_key(doc_dict, block.key, res)
+            set_nested_val(doc.res, block.key, res)
 
         match spec.fmt:
             case Format.json:
-                doc.text = json.dumps(doc_dict, indent=4)
+                doc.text = json.dumps(doc.res, indent=4)
             case Format.yaml:
-                doc.text = yaml.dump(doc_dict, indent=4)
+                doc.text = yaml.dump(doc.res, indent=4)
             case Format.text:
-                doc.text = [f"{key}\n\n{value}" for key, value in doc_dict]
+                doc.text = [f"{key}\n\n{value}" for key, value in doc.res]
 
         return doc

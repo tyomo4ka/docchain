@@ -1,3 +1,5 @@
+import json
+
 from langchain.chains import LLMChain
 from langchain.llms.base import BaseLLM
 from langchain.prompts import PromptTemplate
@@ -6,7 +8,7 @@ from .base import BaseBlock
 from ..output_parsers.json_schema import JSONSchemaOutputParser
 
 
-class JsonSchemaBlock(BaseBlock):
+class JSONSchemaBlock(BaseBlock):
     def __init__(self, key: str, /, title: str, description: str):
         super().__init__(key)
         self.title = title
@@ -29,4 +31,4 @@ class JsonSchemaBlock(BaseBlock):
             description=self.description,
         )
 
-        return result
+        return json.loads(result)
