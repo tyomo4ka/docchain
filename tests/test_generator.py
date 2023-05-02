@@ -10,7 +10,7 @@ from docchain.blocks.pydantic import PydanticBlock
 from docchain.blocks.json_schema import JSONSchemaBlock
 
 from tests.examples.examples import (
-    AddTitleSectionMiddleware,
+    AddSectionMiddleware,
     mark_as_draft,
     throws_exception,
 )
@@ -26,15 +26,15 @@ def test_basic_document_builder():
     document_builder = Generator(
         middleware=(
             mark_as_draft,
-            AddTitleSectionMiddleware,
+            AddSectionMiddleware,
         ),
         llm=FakeListLLM(responses=[]),
     )
     spec = Spec(title="Test title")
     document: Document = document_builder(spec)
     assert document.title == "WIP: Test title (Draft)"
-    assert len(document.sections) == 1
-    assert document.sections[0].title == "test document_title"
+    assert len(document.res.values()) == 1
+    assert list(document.res.values())[0].title == "test document_title"
 
 
 def test_exception_handling():

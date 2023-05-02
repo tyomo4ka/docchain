@@ -7,15 +7,11 @@ from docchain.middleware.base import AbstractMiddleware
 logger = getLogger(__name__)
 
 
-class AddTitleSectionMiddleware(AbstractMiddleware):
+class AddSectionMiddleware(AbstractMiddleware):
     def doc_pass(self, document: Document):
-        document.sections.append(
-            Section(
-                title="test document_title", summary="test summary", text="test text"
-            )
+        document.res["test"] = Section(
+            title="test document_title", summary="test summary", text="test text"
         )
-
-        document.text = document.sections[0].text
 
         return document
 

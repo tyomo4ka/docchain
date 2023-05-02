@@ -11,7 +11,7 @@ class Spec:
         name: str = "",
         description: str = "",
         fmt: Format = Format.json,
-        blocks: list[BaseBlock] = None,
+        blocks: list[BaseBlock] | callable = None,
         doc: Document = None,
     ):
         self.title = title
