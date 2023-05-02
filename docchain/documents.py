@@ -4,12 +4,9 @@ from pydantic import BaseModel, Field
 from pathlib import Path
 
 
-class PydanticFormat(str, Enum):
+class Format(str, Enum):
     json = "json"
     yaml = "yaml"
-
-
-class Format(str, Enum):
     text = "text"
 
 
@@ -18,7 +15,7 @@ class Section(BaseModel):
     Section is a composite block for Documents.
     """
 
-    title: str
+    title: str = Field(default="")
     summary: str | None = None
     text: str = Field(default="")
 
@@ -30,7 +27,7 @@ class Document(Section):
     included in other documents.
     """
 
-    sections: list[Section] = Field(default=[])
-    format: Format | PydanticFormat = Format.text
+    res: dict
+    format: Format = Format.text
     filename: Path = Field(default=None)
     stats: dict[str, int | float] = Field(default={})

@@ -18,7 +18,7 @@ def test_save_document(tmpdir):
             llm=FakeListLLM(responses=[]),
         )
         filename = "test.txt"
-        spec = Spec(filename=filename, document_title="Product description")
+        spec = Spec(filename=filename, title="Product description")
         document: Document = document_builder(spec)
         file = tmpdir.join(filename)
         assert document.title == "Product description"

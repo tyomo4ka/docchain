@@ -25,7 +25,7 @@ def mark_as_draft(build_document):
         logger.debug("mark_as_draft spec pass")
 
         # This modifies the Spec
-        spec.document_title = f"WIP: {spec.document_title}"
+        spec.title = f"WIP: {spec.title}"
         document = build_document(spec)
         logger.debug("mark_as_draft doc pass")
 
