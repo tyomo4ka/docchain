@@ -68,6 +68,7 @@ class Generator:
             )
             set_nested_val(doc.res, block.key, res)
 
+        # TODO: move this to a formatter
         match spec.fmt:
             case Format.json:
                 doc.text = json.dumps(doc.res, indent=4)

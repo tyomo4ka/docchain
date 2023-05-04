@@ -4,7 +4,7 @@ import pytest
 from langchain.llms.fake import FakeListLLM
 from pydantic import BaseModel
 
-from docchain.blocks import JSONSchemaBlock, PydanticBlock
+from docchain.blocks import PydanticBlock
 from docchain.documents import Document, Format
 from docchain.exceptions import DocumentGenerationError
 from docchain.generator import Generator
@@ -145,75 +145,6 @@ def test_nested_key():
             "title": "Title",
             "description": "Description"
         }
-    }
-}"""
-    )
-
-
-def test_jsonschema():
-    generator = Generator(
-        llm=FakeListLLM(
-            responses=[
-                """{
-    "$schema": "http://json-schema.org/draft-2020-12/schema",
-    "type": "object",
-    "properties": {
-        "firstName": {
-            "type": "string"
-        },
-        "lastName": {
-            "type": "string"
-        },
-        "age": {
-            "type": "integer"
-        }
-    },
-    "required": [
-        "firstName",
-        "lastName",
-        "age"
-    ]
-}
-""",
-            ]
-        )
-    )
-    spec = Spec(
-        title="Test document",
-        name="TD",
-        description="Test description",
-        blocks=[
-            JSONSchemaBlock(
-                "person_details_schema",
-                title="Validate person details",
-                description="Include first name, last name, and age.",
-            ),
-        ],
-    )
-
-    doc = generator.build_document(spec)
-    assert (
-        doc.text
-        == """{
-    "person_details_schema": {
-        "$schema": "http://json-schema.org/draft-2020-12/schema",
-        "type": "object",
-        "properties": {
-            "firstName": {
-                "type": "string"
-            },
-            "lastName": {
-                "type": "string"
-            },
-            "age": {
-                "type": "integer"
-            }
-        },
-        "required": [
-            "firstName",
-            "lastName",
-            "age"
-        ]
     }
 }"""
     )

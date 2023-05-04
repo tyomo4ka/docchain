@@ -32,3 +32,17 @@ class Document(Section):
     format: Format = Format.text
     filename: Path = Field(default=None)
     stats: dict[str, int | float] = Field(default={})
+
+    @property
+    def context(self):
+        res = {
+            "doc": {
+                "title": self.title,
+                "summary": self.summary,
+                "text": self.text,
+                "filename": self.filename,
+            },
+        }
+        res.update(self.res)
+
+        return res

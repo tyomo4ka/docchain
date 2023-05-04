@@ -6,6 +6,7 @@ from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 from pydantic import BaseModel
 
+from ..documents import Document
 from .base import BaseBlock
 
 
@@ -18,7 +19,7 @@ class PydanticBlock(BaseBlock):
         self.title = title
         self.description = description
 
-    def __call__(self, llm: BaseLLM, **kwargs):
+    def __call__(self, document: Document, llm: BaseLLM, **kwargs):
         parser = PydanticOutputParser(pydantic_object=self.model)
         default_prompt = PromptTemplate(
             template="""
@@ -32,8 +33,8 @@ class PydanticBlock(BaseBlock):
         )
         llm_chain = LLMChain(prompt=default_prompt, llm=llm)
         result = llm_chain.run(
-            title=self.title,
-            description=self.description,
+            title=self.title.format(**document.context),
+            description=self.description.format(**document.context),
         )
 
         return json.loads(result)

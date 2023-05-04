@@ -54,4 +54,4 @@ class JSONSchemaOutputParser(BaseOutputParser):
 
     @property
     def _type(self) -> str:
-        return "jsonschema"
+        return "json_schema"

@@ -27,9 +27,9 @@ class TextBlock(BaseBlock):
         )
         llm_chain = LLMChain(prompt=prompt, llm=conf.default_llm_factory())
         result = llm_chain.run(
-            section_name=self.title,
-            document_title=document.title,
-            description=self.description,
+            section_name=self.title.format(**document.context),
+            document_title=document.title.format(**document.context),
+            description=self.description.format(**document.context),
         )
 
         return result
