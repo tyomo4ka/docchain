@@ -1,4 +1,5 @@
 import json
+import os
 from collections.abc import Iterable
 from copy import deepcopy
 from logging import getLogger
@@ -25,23 +26,34 @@ class Generator:
         self.llm = llm or conf.default_llm_factory()
         self.handler = handler
 
+    @staticmethod
+    def format(spec: Spec):
+        doc = spec.doc
+
+        match spec.fmt:
+            case Format.json:
+                formatted = json.dumps(doc.res, indent=4)
+            case Format.yaml:
+                formatted = yaml.dump(doc.res, indent=4)
+            case Format.text:
+                formatted = [f"{key}\n\n{value}" for key, value in doc.res]
+            case _:
+                raise DocumentGenerationError(f"Unknown format: {spec.fmt}")
+
+        return formatted
+
     def _build_document(self, spec: Spec) -> Document:
         try:
             document = self.handler(spec)
         except Exception as exc:
-            if conf.debug:
-                if spec.doc:
-                    logger.debug(spec.doc)
+            if spec.doc and spec.doc.filename:
+                logger.debug(spec.doc.res)
 
-                    fs = conf.fs
-                    dirname = f"{conf.fs_workspace}/failed"
-                    fname = f"{dirname}/{spec.title}"
-                    fs.makedirs(dirname, exist_ok=True)
-                    if fs.exists(fname):
-                        fs.rm(fname)
-
-                    with fs.open(fname, mode="a+") as file:
-                        file.write(str(spec.doc.res))
+                fs = conf.fs
+                fname = f"{conf.fs_workspace}/{spec.doc.filename}.wip"
+                fs.makedirs(os.path.dirname(fname), exist_ok=True)
+                with fs.open(fname, mode="a+") as file:
+                    file.write(self.format(spec))
 
             raise DocumentGenerationError("Document generation failed") from exc
 
@@ -70,13 +82,6 @@ class Generator:
             )
             set_nested_val(doc.res, block.key, res)
 
-        # TODO: move this to a formatter
-        match spec.fmt:
-            case Format.json:
-                doc.text = json.dumps(doc.res, indent=4)
-            case Format.yaml:
-                doc.text = yaml.dump(doc.res, indent=4)
-            case Format.text:
-                doc.text = [f"{key}\n\n{value}" for key, value in doc.res]
+        doc.text = self.format(spec)
 
         return doc

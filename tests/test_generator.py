@@ -43,11 +43,13 @@ def test_exception_handling(tmpdir):
             middleware=(throws_exception,),
             llm=FakeListLLM(responses=[]),
         )
-        spec = Spec(title="Test")
+        spec = Spec(
+            title="Test",
+            filename="failed/Test",
+        )
         with pytest.raises(DocumentGenerationError):
             document_builder(spec)
-
-        file = tmpdir.join("failed/Test")
+        file = tmpdir.join(spec.filename + ".wip")
         assert os.path.exists(file)
 
 
@@ -122,6 +124,7 @@ def test_nested_key():
 
     spec = Spec(
         title="Test document",
+        filename="test_document.txt",
         name="TD",
         description="Test description",
         blocks=[

@@ -22,3 +22,7 @@ or linting generated document ot its parts.
 
 - [ ] Implement checkpoints and resume generation from checkpoint on failure.
 - [ ] Store stats in an SQLite database.
+- [ ] Implement `Middleware` for linting.
+- [ ] Implement linting and retrying.
+- [ ] Blocks for HTML, Markdown, Python, one line Python, templates.
+- [ ] Add middleware to plan steps.

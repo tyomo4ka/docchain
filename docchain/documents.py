@@ -29,9 +29,9 @@ class Document(Section):
     """
 
     res: dict[str, Any]
-    format: Format = Format.text
-    filename: Path = Field(default=None)
+    filename: Path | None = None
     stats: dict[str, int | float] = Field(default={})
+    format: Format = Format.text
 
     @property
     def context(self):
