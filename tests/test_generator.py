@@ -38,7 +38,7 @@ def test_basic_document_builder():
 
 
 def test_exception_handling(tmpdir):
-    with override_settings(workspace=tmpdir, debug=True):
+    with override_settings(fs_workspace=tmpdir, debug=True):
         document_builder = Generator(
             middleware=(throws_exception,),
             llm=FakeListLLM(responses=[]),

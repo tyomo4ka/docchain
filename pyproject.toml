@@ -8,10 +8,11 @@ packages = [{include = "docchain"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-langchain = "^0.0.153"
-openai = "^0.27.5"
-python-dotenv = "^1.0.0"
+langchain = "^0.0.158"
+openai = "^0.27.6"
 jsonschema = "^4.17.3"
+fsspec = "^2023.4.0"
+pydantic = "^1.10.7"
 
 
 [tool.poetry.group.test.dependencies]

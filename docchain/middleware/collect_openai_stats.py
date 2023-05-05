@@ -16,7 +16,9 @@ def collect_openai_stats(build_document):
             document = build_document(spec)
 
         if document.filename and conf.debug:
-            with open(f"{conf.workspace}/{document.filename}.stats", "w+") as file:
+            with conf.fs.open(
+                f"{conf.fs_workspace}/{document.filename}.stats", "w+"
+            ) as file:
                 stats = {
                     "total_tokens": cb.total_tokens,
                     "prompt_tokens": cb.prompt_tokens,

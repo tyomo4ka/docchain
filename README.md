@@ -21,5 +21,5 @@ or linting generated document ot its parts.
 ## TODO
 
 - [ ] Implement checkpoints and resume generation from checkpoint on failure.
-- [ ] Use fs abstraction.
-- [ ] Pass generated configs as context to further sections.
+- [x] Use fs abstraction.
+- [x] Pass generated configs as context to further sections.

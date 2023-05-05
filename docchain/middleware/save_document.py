@@ -10,5 +10,5 @@ class SaveDocumentMiddleware(AbstractMiddleware):
 
     def doc_pass(self, document: Document):
         if document.filename:
-            with open(f"{conf.workspace}/{document.filename}", "w") as file:
+            with conf.fs.open(f"{conf.fs_workspace}/{document.filename}", "w") as file:
                 file.write(document.text)

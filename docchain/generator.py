@@ -1,5 +1,4 @@
 import json
-import os
 from collections.abc import Iterable
 from copy import deepcopy
 from logging import getLogger
@@ -34,11 +33,14 @@ class Generator:
                 if spec.doc:
                     logger.debug(spec.doc)
 
-                    fname = f"{conf.workspace}/failed/{spec.title}"
-                    os.makedirs(os.path.dirname(fname), exist_ok=True)
-                    with open(
-                        f"{conf.workspace}/failed/{spec.title}", mode="a+"
-                    ) as file:
+                    fs = conf.fs
+                    dirname = f"{conf.fs_workspace}/failed"
+                    fname = f"{dirname}/{spec.title}"
+                    fs.makedirs(dirname, exist_ok=True)
+                    if fs.exists(fname):
+                        fs.rm(fname)
+
+                    with fs.open(fname, mode="a+") as file:
                         file.write(str(spec.doc.res))
 
             raise DocumentGenerationError("Document generation failed") from exc

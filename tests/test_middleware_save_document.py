@@ -12,7 +12,7 @@ from .examples.examples import AddSectionMiddleware
 
 
 def test_save_document(tmpdir):
-    with override_settings(workspace=tmpdir):
+    with override_settings(fs_workspace=tmpdir):
         document_builder = Generator(
             middleware=(
                 AddSectionMiddleware,
