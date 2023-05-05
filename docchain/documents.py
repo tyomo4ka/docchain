@@ -43,6 +43,7 @@ class Document(Section):
                 "filename": self.filename,
             },
         }
+
         res.update(self.res)
 
         return res

@@ -1,40 +1,33 @@
 import json
 
-from langchain.chains import LLMChain
 from langchain.llms.base import BaseLLM
 from langchain.prompts import PromptTemplate
 
-from ..documents import Document
 from ..output_parsers import UISchemaOutputParser
 from .base import BaseBlock
 
 
-class UISchemaBlock(BaseBlock):
-    def __init__(self, key: str, /, json_schema: str):
-        super().__init__(key)
-        self.json_schema = json_schema
+class UISchemaBlockModel(BaseBlock.model):
+    json_schema: str
 
-    @staticmethod
-    def create_chain(llm: BaseLLM):
+
+class UISchemaBlock(BaseBlock):
+    model = UISchemaBlockModel
+
+    def create_prompt(self, llm: BaseLLM, **kwargs) -> PromptTemplate:
         parser = UISchemaOutputParser()
-        default_prompt = PromptTemplate(
+
+        return PromptTemplate(
             template="""Generate form configuration for the following JSON Schema.
 
 {json_schema}
+
 {format_instructions}
             """,
             output_parser=parser,
             input_variables=["json_schema"],
             partial_variables={"format_instructions": parser.get_format_instructions()},
         )
-        llm_chain = LLMChain(prompt=default_prompt, llm=llm)
 
-        return llm_chain
-
-    def __call__(self, document: Document, llm: BaseLLM, **kwargs) -> any:
-        llm_chain = self.create_chain(llm)
-        result = llm_chain.run(
-            json_schema=self.json_schema.format(**document.context),
-        )
-
+    def transform_result(self, result: str) -> any:
         return json.loads(result)

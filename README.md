@@ -21,5 +21,4 @@ or linting generated document ot its parts.
 ## TODO
 
 - [ ] Implement checkpoints and resume generation from checkpoint on failure.
-- [x] Use fs abstraction.
-- [x] Pass generated configs as context to further sections.
+- [ ] Store stats in an SQLite database.

@@ -1,35 +1,31 @@
-from langchain.chains import LLMChain
+from langchain.llms.base import BaseLLM
 from langchain.prompts import PromptTemplate
+from pydantic import BaseModel
 
 from ..documents import Document
-from ..settings import conf
 from .base import BaseBlock
 
 
-class TextBlock(BaseBlock):
-    def __init__(self, key: str, /, title: str, description: str):
-        super().__init__(key)
-        self.title = title
-        self.description = description
+class TextBlockModel(BaseModel):
+    title: str
+    description: str
 
-    def __call__(self, document: Document, **kwargs):
-        prompt = PromptTemplate(
+
+class TextBlock(BaseBlock):
+    model = TextBlockModel
+
+    def create_prompt(self, document: Document, llm: BaseLLM, **kwargs):
+        return PromptTemplate(
             template="""
-        Write {section_name} section of {document_title} document.
+        Write {title} section for {document_title} document.
 
         {description}
         """,
             input_variables=[
                 "section_name",
-                "document_title",
                 "description",
             ],
+            partial_variables={
+                "document_title": document.title,
+            },
         )
-        llm_chain = LLMChain(prompt=prompt, llm=conf.default_llm_factory())
-        result = llm_chain.run(
-            section_name=self.title.format(**document.context),
-            document_title=document.title.format(**document.context),
-            description=self.description.format(**document.context),
-        )
-
-        return result

@@ -1,27 +1,25 @@
 import json
 
-from langchain.chains import LLMChain
 from langchain.llms.base import BaseLLM
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 from pydantic import BaseModel
 
-from ..documents import Document
 from .base import BaseBlock
 
 
-class PydanticBlock(BaseBlock):
-    def __init__(
-        self, key: str, /, model: type[BaseModel], title: str, description: str = ""
-    ):
-        super().__init__(key)
-        self.model = model
-        self.title = title
-        self.description = description
+class PydanticBlockModel(BaseModel):
+    title: str
+    model: type[BaseModel]
+    description: str = ""
 
-    def __call__(self, document: Document, llm: BaseLLM, **kwargs):
+
+class PydanticBlock(BaseBlock):
+    model = PydanticBlockModel
+
+    def create_prompt(self, llm: BaseLLM, **kwargs):
         parser = PydanticOutputParser(pydantic_object=self.model)
-        default_prompt = PromptTemplate(
+        return PromptTemplate(
             template="""
         Write {title} section of configuration file for {description}.
 
@@ -31,10 +29,6 @@ class PydanticBlock(BaseBlock):
             output_parser=parser,
             partial_variables={"format_instructions": parser.get_format_instructions()},
         )
-        llm_chain = LLMChain(prompt=default_prompt, llm=llm)
-        result = llm_chain.run(
-            title=self.title.format(**document.context),
-            description=self.description.format(**document.context),
-        )
 
+    def transform_result(self, result: str) -> any:
         return json.loads(result)
