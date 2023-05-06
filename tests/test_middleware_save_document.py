@@ -8,12 +8,12 @@ from docchain.middleware import SaveDocumentMiddleware
 from docchain.specs import Spec
 
 from .conftest import override_settings
-from .examples.examples import AddSectionMiddleware
+from .testing.middleware import AddSectionMiddleware
 
 
 def test_save_document(tmpdir):
     with override_settings(fs_workspace=tmpdir):
-        document_builder = Generator(
+        generator = Generator(
             middleware=(
                 AddSectionMiddleware,
                 SaveDocumentMiddleware,
@@ -36,7 +36,7 @@ def test_save_document(tmpdir):
                 save_document,
             ],
         )
-        document: Document = document_builder(spec)
+        document: Document = generator(spec)
         file = tmpdir.join(filename)
         assert document.title == "Product description"
         assert os.path.exists(file)

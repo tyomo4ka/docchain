@@ -16,7 +16,7 @@ class AddSectionMiddleware(AbstractMiddleware):
         return document
 
 
-def mark_as_draft(build_document):
+def mark_as_draft_middleware(build_document):
     def run(spec: Spec):
         logger.debug("mark_as_draft spec pass")
 
@@ -33,7 +33,7 @@ def mark_as_draft(build_document):
     return run
 
 
-def throws_exception(build_document):
+def throw_exception_middleware(build_document):
     def run(spec: Spec):
         build_document(spec)
         # Exception is raised after document generation.

@@ -8,7 +8,7 @@ from .base import BaseBlock
 
 class TextBlockModel(BaseModel):
     title: str
-    description: str
+    description: str = ""
 
 
 class TextBlock(BaseBlock):
@@ -22,7 +22,7 @@ class TextBlock(BaseBlock):
         {description}
         """,
             input_variables=[
-                "section_name",
+                "title",
                 "description",
             ],
             partial_variables={
