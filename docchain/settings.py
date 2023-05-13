@@ -4,6 +4,7 @@ from pydantic import BaseSettings, DirectoryPath, Field, PyObject
 
 class Settings(BaseSettings):
     class Config:
+        env_prefix = "DOCCHAIN_"
         env_file = ".env"
         env_file_encoding = "utf-8"
 
