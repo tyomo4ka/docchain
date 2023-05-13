@@ -809,7 +809,7 @@ requirements-deprecated-finder = ["pip-api", "pipreqs"]
 name = "jinja2"
 version = "3.1.2"
 description = "A very fast and expressive template engine."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -946,7 +946,7 @@ files = [
 name = "markupsafe"
 version = "2.1.2"
 description = "Safely add untrusted strings to HTML/XML markup."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -2047,4 +2047,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "36078bf5d031a63b07fca0c0c995a7e7c50ae1e5857e79c6e1adce79c86ed85e"
+content-hash = "f805f8cd53b3030dc9df1bee5776c4b883c74b451b0008ec53f8b3327826b8bb"

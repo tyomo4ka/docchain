@@ -1,3 +1,4 @@
+from jinja2 import Template
 from langchain.chains import LLMChain
 from langchain.llms.base import BaseLLM
 from langchain.prompts import BasePromptTemplate
@@ -39,7 +40,8 @@ class BaseBlock:
         res = {}
         for key, value in self.config.dict().items():
             if isinstance(value, str):
-                value = value.format(**document.context)
+                template = Template(value)
+                value = template.render(document.context)
 
             res[key] = value
 
